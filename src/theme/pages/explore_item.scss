@@ -1,0 +1,128 @@
+@import "../variables";
+
+.img-container.item {
+  gap: 5px;
+  ion-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+  .main-img {
+    width: 956.6px;
+    height: 628.13px;
+    overflow: hidden;
+    border-radius: 3px;
+  }
+  .right-col {
+    gap: 4px;
+  }
+  .sub-img {
+    width: 474.93px;
+    height: 312.065px;
+    border-radius: 3px;
+  }
+}
+
+.explore-item {
+  padding-top: 30px;
+  padding-bottom: 50px;
+  width: 100%;
+  .space-apart-row {
+    width: 100%;
+  }
+  .item-title {
+    padding-bottom: 20px;
+    border-bottom: 1px solid $lightGrey;
+    margin-bottom: 30px;
+    h1 {
+      margin: 0 30px 0 0;
+    }
+    label {
+      margin: 0 0 5px;
+    }
+  }
+  .description {
+    .left-row {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    label {
+      margin: 0 0 10px;
+    }
+    .description-text {
+      max-width: 50vw;
+      white-space: pre-line;
+      margin: 0 30px 0 0;
+    }
+    .right-side {
+      max-width: 245px;
+      width: 100%;
+    }
+    .price {
+      margin: 30px 0 0
+    }
+    h3 {
+      margin: 10px 0 0;
+    }
+  }
+}
+
+.popup-section.item {
+  .dropdown-square {
+    margin: 7px 0;
+  }
+  textarea {
+    margin-bottom: 7px;
+  }
+  button.red {
+    margin-bottom: 8px;
+  }
+  .left-col {
+    label.text-red {
+      margin: 12px 0 7px;
+    }
+  }
+  .request {
+    margin-bottom: 12px;
+  }
+  hr {
+    background-color: $lightGrey;
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 1439px){
+  .img-container.item  {
+    .main-img {
+      width: 66.43vw;
+      height: 43.36vw;
+    }
+    .sub-img {
+      width: 33.57vw;
+      height: calc(21.68vw - 2px);
+    }
+  }
+}
+
+@media screen and (max-width: 719px) {
+  .explore-item {
+    .space-apart-row {
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 16px;
+    }
+    .description {
+      .description-text {
+        max-width: 100vw;
+      }
+      .right-side.left-col {
+        margin-top: 20px;
+        max-width: none;
+      }
+      label {
+        max-width: 245px;
+      }
+    }
+  }
+}

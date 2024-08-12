@@ -1,0 +1,18 @@
+@import "../variables";
+
+.explore-items {
+  padding-bottom: 70px;
+  padding-top: 40px;
+  div.left-row {
+    gap: 10px;
+    margin-top: 10px;
+  }
+}
+
+.explore-search {
+  padding-bottom: 25px;
+  width: inherit;
+  .left-row {
+    flex-wrap: wrap;
+  }
+}

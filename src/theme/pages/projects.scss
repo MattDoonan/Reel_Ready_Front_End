@@ -1,0 +1,81 @@
+@import "../variables";
+
+.img-container.project {
+  width: 100vw;
+  height: 35.97vw;
+  overflow: hidden;
+  ion-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.project-content {
+  padding-top: 30px;
+  padding-bottom: 50px;
+  width: 100%;
+  .left-row.container {
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .item-title {
+    width: 100%;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: solid 1px $lightGrey;
+  }
+  .description {
+    gap: 10px;
+    width: 100%;
+  }
+}
+
+.product-placements {
+  width: 100%;
+  margin-top: 50px;
+  .space-apart-row {
+    align-items: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 12px;
+    .left-row {
+      margin: 0;
+    }
+  }
+  article {
+    margin-top: 20px;
+    p.text-dark-grey {
+      margin: 6px 0 10px;
+      max-width: 758px;
+    }
+    ion-img {
+      width: 14px;
+    }
+    button.left-row {
+      border-bottom: 1px solid $black;
+      margin-top: 0;
+      align-items: flex-start;
+    }
+    .request-container {
+      margin: 16px 0 0;
+      gap: 16px;
+    }
+  }
+}
+
+.popup-section.pp {
+  textarea {
+    margin: 0 0 10px;
+  }
+  .dropdown-square, input {
+    margin: 0 0 7px;
+  }
+}
+
+@media screen and (max-width: 519px){
+  .img-container.project {
+    height: 75vw;
+  }
+}

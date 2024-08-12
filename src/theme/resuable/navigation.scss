@@ -1,0 +1,17 @@
+@import "../variables";
+
+nav {
+  background-color: #FAFAFA;
+  width: 100vw;
+  border-top: 1px solid $lightGrey;
+  padding: 15px 30px;
+  align-self: flex-end;
+  .space-apart-row {
+    width: 100%;
+    max-width: 220px;
+    button {
+      gap: 7px;
+      align-items: center;
+    }
+  }
+}

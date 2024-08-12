@@ -1,0 +1,7 @@
+{
+  "name": "Reel_Ready_Front_End",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
