@@ -24,7 +24,7 @@
             </div>
           </div>
           <div class="grid">
-            <list-item :id="item.id" :image="item.image" :heading="item.name" link-heading="ExploreItem" :sub-heading="item.brand" :key="index" v-for="(item, index) in products"/>
+            <list-item :id="item.id.toString()" :image="item.files" :heading="item.title" link-heading="ExploreItem" :sub-heading="item.brand_name" :key="index" v-for="(item, index) in products"/>
           </div>
         </section>
       </main>
@@ -35,11 +35,23 @@
 
 <script lang="ts">
 
+import {ref} from "vue";
+import {url} from "@/base_information";
+
 import {IonPage, IonContent, IonImg, IonNav} from '@ionic/vue';
 import {useRouter} from "vue-router";
 import AppNav from "@/components/AppNav.vue";
 import ListItem from "@/components/ListItem.vue";
+import axios from 'axios';
+
 export default {
+  data() {
+    return {
+      pcActive: false,
+      restrictActive: false,
+      itemsLoaded: 10,
+    }
+  },
   components: {
     ListItem,
     AppNav,
@@ -49,14 +61,27 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const products = [{name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}]
-    return { router, products };
-  },
-  data() {
-    return {
-      pcActive: false,
-      restrictActive: false,
+    const filters = ref([]);
+    const products = ref([])
+    const fetchFilters = async () => {
+      try {
+        const response = await axios.get(url + 'explore-filters');
+        filters.value = response.data
+      } catch (error) {
+        console.error('Error fetching filters: ', error);
+      }
     }
+    const fetchProducts = async (toLoad:number) => {
+      try {
+        const response = await axios.get(url + `get_products/${toLoad}`);
+        products.value = response.data
+      } catch (error) {
+        console.error('Error fetching filters: ', error);
+      }
+    }
+    fetchFilters();
+    fetchProducts(10);
+    return { router, products, filters };
   },
   methods: {
     togglePC() {

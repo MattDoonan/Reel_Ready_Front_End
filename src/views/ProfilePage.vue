@@ -24,7 +24,7 @@
             </div>
           </div>
           <div class="grid">
-            <list-item :id="item.id" :image="item.image" :heading="item.name" link-heading="Project" :sub-heading="item.brand" :key="index" v-for="(item, index) in projects"/>
+            <list-item :id="item.id.toString()" :image="item.image" :heading="item.name" link-heading="Project" :sub-heading="item.type" :key="index" v-for="(item, index) in projects"/>
           </div>
         </section>
       </main>
@@ -39,6 +39,9 @@ import {IonPage, IonContent, IonImg, IonNav} from '@ionic/vue';
 import {useRouter} from "vue-router";
 import AppNav from "@/components/AppNav.vue";
 import ListItem from "@/components/ListItem.vue";
+import {ref} from 'vue'
+import axios from "axios";
+import {url, user_code} from "@/base_information";
 export default {
   components: {
     ListItem,
@@ -49,7 +52,17 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const projects = [{name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}, {name: 'Coke can', image: '/test/coke.png', brand: 'Coca-Cola', id: '123'}]
+    const projects = ref();
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get(url + `get_user_projects/${user_code}`);
+        projects.value = response.data
+      } catch (error) {
+        console.error('Error fetching filters: ', error);
+        await router.push('/');
+      }
+    }
+    fetchProjects();
     return { router, projects };
   },
 
