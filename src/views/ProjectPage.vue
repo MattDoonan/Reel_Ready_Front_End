@@ -88,10 +88,11 @@ export default {
           await router.push('/explore');
         }
         item.value = project;
+        console.log(product_placements);
         productPlacements.value = product_placements;
       } catch (error) {
         console.error('Error fetching filters: ', error);
-        await router.push('/explore');
+        await router.push('/profile');
       }
     }
     getProduct();

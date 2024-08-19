@@ -6,7 +6,7 @@ import {IonImg} from "@ionic/vue";
 <template>
   <div class="left-row request">
     <div class="request-img-container">
-      <ion-img :src="image"/>
+      <ion-img :src="imageSrc"/>
     </div>
     <div class="left-col">
       <p class="text-black">
@@ -15,7 +15,7 @@ import {IonImg} from "@ionic/vue";
       <label class="text-dark-grey">
         {{subTitle}}
       </label>
-      <div class="left-row" v-if="status == 'Requested'">
+      <div class="left-row" v-if="status == 'requested'">
         <button class="black-small">
           Accept
         </button>
@@ -23,13 +23,13 @@ import {IonImg} from "@ionic/vue";
           Decline
         </button>
       </div>
-      <span class="grey-border-small" v-if="status == 'Pending'">
+      <span class="grey-border-small" v-if="status == 'pending'">
         Pending...
       </span>
-      <span class="black-border-small" v-if="status == 'Accepted'">
+      <span class="black-border-small" v-if="status == 'accepted'">
         Accepted
       </span>
-      <span class="red-border-small" v-if="status == 'Declined'">
+      <span class="red-border-small" v-if="status == 'declined'">
         Declined
       </span>
     </div>
@@ -61,6 +61,11 @@ export default {
       type: String,
       required: true,
     },
+  },
+  computed: {
+    imageSrc(): string {
+      return `data:image/png;base64,${this.image}`;
+    }
   },
 }
 </script>

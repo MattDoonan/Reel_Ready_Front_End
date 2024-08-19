@@ -13,12 +13,12 @@
     <p class="text-dark-grey">
       {{description}}
     </p>
-    <button @click="toggleRequests" class="clear left-row small-text">
+    <button v-if="requests.length != 0" @click="toggleRequests" class="clear left-row small-text">
       {{requestsShow ? 'Hide requests' : 'Show requests'}}
       <ion-img :style="requestsShow ? 'rotate:180deg' : 'rotate:0'" src="/svg/down-arrow.svg"/>
     </button>
     <div class="left-col request-container" v-if="requestsShow">
-      <PlacementRequest :title="request.name" :image="request.image" :sub-title="request.brand" :status="request.status" :key="index" v-for="(request, index) in requests"/>
+      <PlacementRequest :title="request.title" :image="request.files" :sub-title="request.brand" :status="request.response" :key="index" v-for="(request, index) in requests"/>
     </div>
   </article>
 </template>
