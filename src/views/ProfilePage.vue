@@ -12,11 +12,11 @@
           <div class="project-search">
             <div class="input-search">
               <ion-img alt="search icon" src="/svg/search-icon.svg"/>
-              <input type="text"/>
+              <input v-model="toSearch" @input="inputHandler" type="text"/>
             </div>
             <div class="left-row">
               <div class="dropdown">
-                <button @click="toggleRestrict" class="left-row">
+                <button @click="toggleCreate" class="left-row">
                   Create Project
                   <ion-img alt="plus" src="/svg/plus.svg"/>
                 </button>
@@ -27,6 +27,7 @@
             <list-item :id="item.id.toString()" :image="item.image" :heading="item.name" link-heading="Project" :sub-heading="item.type" :key="index" v-for="(item, index) in projects"/>
           </div>
         </section>
+        <project-creation-form :go-profile="goProfile" :update-projects="updateProjects" :project-type="projectTypes" :tags="tags" :toggle-active="toggleCreate" :is-active="isActive"/>
       </main>
     </ion-content>
     <app-nav/>
@@ -42,8 +43,16 @@ import ListItem from "@/components/ListItem.vue";
 import {ref} from 'vue'
 import axios from "axios";
 import {url, user_code} from "@/base_information";
+import {ProductPlacementType, projectsExploreType} from "@/types";
+import ProjectCreationForm from "@/components/ProjectCreationForm.vue";
 export default {
+  data() {
+    return {
+      isActive: false
+    }
+  },
   components: {
+    ProjectCreationForm,
     ListItem,
     AppNav,
     IonPage,
@@ -52,19 +61,54 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const projects = ref();
+    const projects = ref<projectsExploreType[]>([]);
+    const toSearch = ref<string>("");
+    const projectTypes = ref<string[]>([])
+    const tags = ref<string[]>([])
+
+    const updateProjects = (newProjects: projectsExploreType[]) => {
+      projects.value = newProjects;
+    }
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(url + `get_user_projects/${user_code}`);
+        let endpoint =  url + `get_user_projects/${user_code}`
+
+        if (toSearch.value !== "") {
+          endpoint = endpoint + `?search=${toSearch.value}`;
+        }
+        const response = await axios.get(endpoint);
         projects.value = response.data
       } catch (error) {
         console.error('Error fetching filters: ', error);
         await router.push('/');
       }
-    }
-    fetchProjects();
-    return { router, projects };
-  },
+    };
 
+    const getProjectVar = async () => {
+      try {
+        const response = await axios.get( url + `get_tags_and_pt`);
+        const {data_tags, data_project_types} = response.data
+        projectTypes.value = data_project_types
+        tags.value = data_tags
+      } catch (_) {
+        console.error('Error fetching tags and project type');
+      }
+    };
+    const inputHandler = () => {
+      fetchProjects();
+    };
+
+    getProjectVar();
+    fetchProjects();
+    return { router, projects, inputHandler, toSearch, projectTypes, tags, updateProjects };
+  },
+  methods: {
+    toggleCreate() {
+      this.isActive = !this.isActive;
+    },
+    goProfile() {
+      this.router.push('/profile')
+    },
+  }
 }
 </script>

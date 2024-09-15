@@ -1,7 +1,7 @@
 @import "../variables";
 
 section {
-  max-width: 1440px;
+  max-width: 1194px;
   padding-left: 70px;
   padding-right: 70px;
   min-width: 720px;
@@ -10,7 +10,7 @@ section {
 .popup-background {
   background-color: $darkGrey;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 58px);
   position: fixed;
   z-index: -1;
 }
@@ -33,6 +33,7 @@ section {
 .popup-section {
   padding: 20px 30px;
   max-width: 500px;
+  min-width: auto;
   width: 100%;
   background-color: $white;
   border-radius: 3px;
@@ -150,11 +151,12 @@ button.red-small:hover {
 
 div.dropdown {
   width: fit-content;
+  position: relative;
+  min-width: 180px;
   button {
     padding: 9px 16px;
-    background: $lightGrey;
+    background: none;
     border: none;
-    border-radius: 18px;
     align-items: center;
     width: fit-content;
     ion-img {
@@ -162,10 +164,23 @@ div.dropdown {
       height: 16px;
     }
   }
+  div {
+    position: absolute;
+    background: $white;
+    border-radius: 0 0 3px 3px;
+    button {
+      width: 100%;
+      text-align: left;
+    }
+    button:hover {
+      background: $lightGrey;
+    }
+  }
 }
 
 div.dropdown-square {
   width: 100%;
+  position: relative;
   button {
     gap: 16px;
     padding: 5px 9px;
@@ -174,10 +189,42 @@ div.dropdown-square {
     border-radius: 3px;
     align-items: center;
     width: 100%;
+    position: relative;
+    background: $white;
     ion-img {
       margin-left: 8px;
       height: 7px;
     }
+  }
+  button.active, input.active {
+    border-radius: 3px 3px 0 0;
+    border-bottom-color: transparent;
+  }
+
+  div {
+    position: absolute;
+    background: $white;
+    width: 100%;
+    max-height: 110px;
+    overflow-y: auto;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 3px 3px;
+    border: 1px solid $black;
+    border-top: none;
+    z-index: 1;
+    button {
+      border: none;
+      padding: 7px 10px;
+    }
+    button:hover:not(.no-hover) {
+      background-color: $lightGrey;
+    }
+  }
+}
+
+div.dropdown-square.error {
+  button, div {
+    border-color: $red;
   }
 }
 
@@ -191,6 +238,12 @@ input.square {
   padding: 5px 9px;
   color: $black;
 }
+
+textarea.error,
+input.square.error {
+  border: 1px solid $red;
+}
+
 
 textarea {
   min-height: 90px;
@@ -218,6 +271,7 @@ textarea::placeholder {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+    max-width: calc(50vw - 30px - 10px);
   }
   h4 {
     color: $darkGrey;
@@ -225,6 +279,7 @@ textarea::placeholder {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 1px 0 0;
+    max-width: calc(50vw - 30px - 10px);
   }
   ion-img {
     width: 100%;
@@ -253,12 +308,20 @@ textarea::placeholder {
   width: 100%;
   margin: 0 0 0 0;
   gap: 9px;
+  label {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .request-img-container {
     max-width: 126px;
     max-height: 83px;
     width: 100%;
-    height: 100%;
+    height: inherit;
     border-radius: 3px;
+    overflow: hidden;
     ion-img {
       object-fit: cover;
       width: 100%;
@@ -312,6 +375,13 @@ textarea::placeholder {
 }
 
 @media screen and (max-width: 559px){
+  .listItem {
+    max-width: none;
+    overflow: hidden;
+    h3, h4 {
+      max-width: none;
+    }
+  }
   .img-container-list {
     max-width: calc(100vw - 60px);
     max-height: calc(66vw - 60px);

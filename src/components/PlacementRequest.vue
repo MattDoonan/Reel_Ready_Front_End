@@ -1,8 +1,3 @@
-<script setup lang="ts">
-
-import {IonImg} from "@ionic/vue";
-</script>
-
 <template>
   <div class="left-row request">
     <div class="request-img-container">
@@ -15,15 +10,15 @@ import {IonImg} from "@ionic/vue";
       <label class="text-dark-grey">
         {{subTitle}}
       </label>
-      <div class="left-row" v-if="status == 'requested'">
-        <button class="black-small">
+      <div class="left-row" v-if="status == 'pending' && sentTo == 'set_designer'">
+        <button @click="process_request(product_id, product_placement_id, 'accepted')" class="black-small">
           Accept
         </button>
-        <button class="red-small">
+        <button class="red-small" @click="process_request(product_id, product_placement_id, 'declined')">
           Decline
         </button>
       </div>
-      <span class="grey-border-small" v-if="status == 'pending'">
+      <span class="grey-border-small" v-if="status == 'pending' && sentTo == 'brand_manager'">
         Pending...
       </span>
       <span class="black-border-small" v-if="status == 'accepted'">
@@ -37,6 +32,8 @@ import {IonImg} from "@ionic/vue";
 </template>
 
 <script lang="ts">
+
+import {IonImg} from "@ionic/vue";
 
 export default {
   data() {
@@ -61,11 +58,30 @@ export default {
       type: String,
       required: true,
     },
+    sentTo: {
+      type: String,
+      required: true,
+    },
+    product_id: {
+      type: String,
+      required: true,
+    },
+    product_placement_id: {
+      type: String,
+      required: true,
+    },
+    process_request: {
+      type: Function,
+      required: true
+    }
   },
   computed: {
     imageSrc(): string {
       return `data:image/png;base64,${this.image}`;
     }
+  },
+  components: {
+    IonImg
   },
 }
 </script>

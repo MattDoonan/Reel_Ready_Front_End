@@ -41,10 +41,10 @@
                 </button>
               </div>
             </div>
-            <product-placement :name="pp.title" :description="pp.scene_description" :desired-item="pp.product_category" :requests="pp.product_requests" :key="index" v-for="(pp, index) in productPlacements"/>
+            <product-placement :process_request="processRequest" :id="pp.product_placement_id" :name="pp.title" :description="pp.scene_description" :desired-item="pp.product_category" :requests="pp.product_requests" :key="index" v-for="(pp, index) in productPlacements"/>
           </div>
         </section>
-        <AddProductPlacement :toggle-active="togglePP" :is-active="ppActive"/>
+        <AddProductPlacement v-if="item" :go-profile="goProfile" :update-p-p="updatePP" :item-id="project_id" :categories="categories" :toggle-active="togglePP" :is-active="ppActive"/>
       </main>
     </ion-content>
     <app-nav/>
@@ -61,6 +61,9 @@ import AddProductPlacement from "@/components/AddProductPlacement.vue";
 import {ref} from "vue";
 import axios from 'axios';
 import {url, user_code} from "@/base_information";
+
+import {ProductPlacementType, ProductType} from "@/types"
+
 export default {
   data() {
     return {
@@ -78,35 +81,89 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const item = ref([])
-    const productPlacements = ref([])
+    const item = ref<ProductType>()
+    const productPlacements = ref<ProductPlacementType[]>([])
+    const categories = ref([])
+    const project_id: string = router.currentRoute.value.params.id.toString();
+
+    const updatePP = (newProductPlacements: ProductPlacementType[]) => {
+      productPlacements.value = newProductPlacements;
+    }
+
     const getProduct = async () => {
       try {
-        const response = await axios.get(url + `get_project/${router.currentRoute.value.params.id}/${user_code}`);
+        const response = await axios.get(url + `get_project/${project_id}/${user_code}`);
         const { project, product_placements } = response.data;
         if (!project) {
           await router.push('/explore');
         }
         item.value = project;
-        console.log(product_placements);
         productPlacements.value = product_placements;
       } catch (error) {
         console.error('Error fetching filters: ', error);
         await router.push('/profile');
       }
-    }
-    getProduct();
+    };
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(url + 'explore-filters');
+        categories.value = response.data
+      } catch (error) {
+        console.error('Error fetching filters: ', error);
+      }
+    };
 
-    return { router, item, productPlacements };
+    const updateProductRequest = (product_id: string, product_placement_id: string, newResponse: string) => {
+      const productPlacement = productPlacements.value.find(item =>
+          (placement:ProductPlacementType) => placement.product_placement_id === product_placement_id
+      );
+      if (productPlacement) {
+        const productRequest = productPlacement.product_requests.find(
+            (request) => request.product_id === product_id
+        );
+        if (productRequest) {
+          productRequest.response = newResponse;
+        }
+      }
+    }
+
+    getProduct();
+    fetchCategories();
+
+    return { router, item, productPlacements, categories, project_id, updatePP, updateProductRequest };
   },
   computed: {
     imageSrc(): string {
+      if (this.item)
       return `data:image/png;base64,${this.item.image}`;
+      else {
+        return ''
+      }
     }
   },
   methods: {
     togglePP() {
       this.ppActive = !this.ppActive;
+    },
+    goProfile() {
+      this.router.push('/profile')
+    },
+
+    async processRequest(product_id: string, product_placement_id:string, outcome: string) {
+      try {
+        const response = await axios.post(url + `process_set_designer_incoming_request/${user_code}`, {
+          product_id: product_id,
+          product_placement_id: product_placement_id,
+          outcome: outcome
+        });
+        if (response.status === 201) {
+          this.updateProductRequest(product_id, product_placement_id, outcome)
+        } else {
+          console.log("Error processing request")
+        }
+      } catch (error) {
+        console.log("Error processing request")
+      }
     },
   }
 }

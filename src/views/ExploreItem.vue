@@ -50,13 +50,9 @@
               <label class="text-dark-grey">
                 Prop cannot be apart of a scene or film that is:
               </label>
-              <div class="left-row">
-                <article class="restrictions">
-                  <p>
-                    {{ item.restrictions }}
-                  </p>
-                </article>
-              </div>
+              <p>
+                {{ item.restrictions }}
+              </p>
               <h4 class="text-red price">
                 Price
               </h4>
@@ -69,7 +65,7 @@
             </div>
           </div>
         </section>
-        <product-request-form :received="received" :requests="delivered" :is-active="formActive" :toggle-active="toggleForm"/>
+        <product-request-form :process_request="processRequest" :update-sent-req="updateSentReq" :product-id="productId" :productPlacementNames="productPlacementNames" :received="received" :requests="delivered" :is-active="formActive" :toggle-active="toggleForm"/>
       </main>
     </ion-content>
     <app-nav/>
@@ -85,6 +81,7 @@ import ProductRequestForm from "@/components/ProductRequestForm.vue";
 import axios from "axios";
 import {ref} from "vue";
 import {url, user_code} from "@/base_information";
+import {productPlacementNamesType, productRequestType, productType} from "@/types";
 export default {
   data() {
     return {
@@ -101,12 +98,27 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const item = ref([])
-    const received = ref([])
-    const delivered = ref([])
+    const item = ref<productType>();
+    const productPlacementNames = ref<productPlacementNamesType[]>([])
+    const received = ref<productRequestType[]>([]);
+    const delivered = ref<productRequestType[]>([]);
+    const productId = router.currentRoute.value.params.id.toString()
+
+    const updateSentReq = (newRequest:productRequestType[]) => {
+      delivered.value = newRequest;
+    }
+    const getProductPlacements = async (product: productType) => {
+      try {
+        if (!product) return;
+        const ppNames = await axios.get(`${url}get_product_placement_names/${user_code}/${product.category_name}`);
+        productPlacementNames.value = ppNames.data;
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    }
     const getProduct = async () => {
       try {
-        const response = await axios.get(url + `get_single_product/${router.currentRoute.value.params.id}/${user_code}`);
+        const response = await axios.get(url + `get_single_product/${productId}/${user_code}`);
         const { product, sent_requests, received_requests } = response.data;
         if (!product) {
           await router.push('/explore');
@@ -114,13 +126,22 @@ export default {
         item.value = product;
         delivered.value = sent_requests;
         received.value = received_requests;
+        await getProductPlacements(product);
       } catch (error) {
-        console.error('Error fetching filters: ', error);
+        console.error('Error fetching data: ', error);
         await router.push('/explore');
       }
     }
+    const updateProductRequest = (product_id: string, product_placement_id: string, newResponse: string) => {
+      const product = received.value.find(item =>
+          item.product_id === product_id && item.product_placement_id === product_placement_id
+      );
+      if (product) {
+        product.response = newResponse
+      }
+    }
     getProduct();
-    return { router, item, received, delivered };
+    return { router, item, received, delivered, productPlacementNames, productId, updateSentReq, updateProductRequest };
   },
   computed: {
     filteredImages() {
@@ -129,24 +150,43 @@ export default {
       return list;
     },
     images(): string[] {
-      const imgs: string[] = [];
-      for (let i in this.item.files) {
-        imgs.push(`data:image/png;base64,${this.item.files[i]}`)
+      if (this.item) {
+        const imgs: string[] = [];
+        for (let i in this.item.files) {
+          imgs.push(`data:image/png;base64,${this.item.files[i]}`)
+        }
+        return imgs;
       }
-      return imgs;
+      return []
     },
-    twodp(): number {
-      if (this.item.price !== undefined && this.item.price !== null) {
-        return this.item.price.toFixed(2);
+    twodp(): string {
+      if (this.item) {
+        if (this.item.price !== undefined && this.item.price !== null) {
+          return this.item.price.toFixed(2);
+        }
       }
-      else {
-        this.item.price
-      }
+      return "0.00";
     }
   },
   methods: {
     toggleForm() {
       this.formActive = !this.formActive
+    },
+    async processRequest(product_id: string, product_placement_id:string, outcome: string) {
+      try {
+        const response = await axios.post(url + `process_set_designer_incoming_request/${user_code}`, {
+          product_id: product_id,
+          product_placement_id: product_placement_id,
+          outcome: outcome
+        });
+        if (response.status === 201) {
+          this.updateProductRequest(product_id, product_placement_id, outcome)
+        } else {
+          console.log("Error processing request")
+        }
+      } catch (error) {
+        console.log("Error processing request")
+      }
     },
   },
 
