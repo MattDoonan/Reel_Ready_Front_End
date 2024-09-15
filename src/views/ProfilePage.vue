@@ -14,14 +14,10 @@
               <ion-img alt="search icon" src="/svg/search-icon.svg"/>
               <input v-model="toSearch" @input="inputHandler" type="text"/>
             </div>
-            <div class="left-row">
-              <div class="dropdown">
-                <button @click="toggleCreate" class="left-row">
-                  Create Project
-                  <ion-img alt="plus" src="/svg/plus.svg"/>
-                </button>
-              </div>
-            </div>
+            <button @click="toggleCreate" class="left-row clear crate-popup">
+              Create Project
+              <ion-img alt="plus" src="/svg/plus.svg"/>
+            </button>
           </div>
           <div class="grid">
             <list-item :id="item.id.toString()" :image="item.image" :heading="item.name" link-heading="Project" :sub-heading="item.type" :key="index" v-for="(item, index) in projects"/>

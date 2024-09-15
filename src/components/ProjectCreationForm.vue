@@ -14,7 +14,7 @@
           <label class="text-red">
             {{imageError ? 'Invalid image format' : 'Upload an image'}}
           </label>
-          <button class="upload-img-container" @click="uploadImage">
+          <button :class="{'error': imageError}" class="upload-img-container" @click="uploadImage">
             <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" style="display:none;" />
             <ion-img :src="image !== '' ? image : '/svg/plus.svg'" :style="image === '' ? { 'object-fit': 'none' } : {}" />
           </button>
@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <div class="left-row container">
+      <div v-if="selectedTags.length > 0" class="left-row container">
         <button @click="removeTag(text)" class="tags left-row" :key="index" v-for="(text, index) in selectedTags">
           {{ text }}
           <ion-img src="/svg/exit.svg" alt="exit"/>
@@ -191,6 +191,9 @@ export default {
       }
       if (this.selectedProjectType === 'none' || !this.projectType.includes(this.selectedProjectType)) {
         this.projectTypeError = true;
+      }
+      if (this.image === '') {
+        this.imageError = true;
       }
       for (let tag of this.selectedTags) {
         if (!this.tags.includes(tag)) {

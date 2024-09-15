@@ -36,11 +36,15 @@
   width: 100%;
   margin-top: 50px;
   .space-apart-row {
-    align-items: flex-start;
     margin-bottom: 10px;
     flex-wrap: wrap;
     gap: 12px;
-    .left-row {
+    width: 100%;
+    align-items: center;
+    h2 {
+      margin: 0 30px 0 0 ;
+    }
+    button {
       margin: 0;
     }
   }
@@ -74,8 +78,15 @@
   }
 }
 
-@media screen and (max-width: 519px){
+@media screen and (max-width: 519px) {
   .img-container.project {
     height: 75vw;
+  }
+  .product-placements {
+    .space-apart-row {
+      h2 {
+        margin: 0;
+      }
+    }
   }
 }

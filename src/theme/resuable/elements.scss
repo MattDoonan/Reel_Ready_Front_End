@@ -13,6 +13,8 @@ section {
   height: calc(100vh - 58px);
   position: fixed;
   z-index: -1;
+  left: 0;
+  top: 0;
 }
 
 .popup-background.active {
@@ -223,8 +225,17 @@ div.dropdown-square {
 }
 
 div.dropdown-square.error {
-  button, div {
+  button, div, input {
     border-color: $red;
+  }
+}
+
+.crate-popup {
+  align-items: center;
+  margin: 10px 0 0 12px;
+  ion-img {
+    margin-left: 8px;
+    height: 16px;
   }
 }
 
@@ -239,9 +250,10 @@ input.square {
   color: $black;
 }
 
+button.error,
 textarea.error,
 input.square.error {
-  border: 1px solid $red;
+  border: 1px solid $red !important;
 }
 
 
@@ -402,6 +414,13 @@ textarea::placeholder {
   .img-container-list {
     max-width: calc(100vw - 30px);
     max-height: calc(66vw - 30px);
+  }
+}
+
+@media screen and (max-width: 360px){
+  .popup-section {
+    padding: 20px 15px;
+    max-height: calc(100vh - 60px);
   }
 }
 

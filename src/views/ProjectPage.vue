@@ -29,17 +29,15 @@
               {{item.description}}
             </p>
           </div>
-          <div class="product-placements">
+          <div class="product-placements left-col">
             <div class="space-apart-row">
               <h2 class="text-red">
                 Product Placement Posts
               </h2>
-              <div class="dropdown">
-                <button @click="togglePP" class="left-row">
-                  Add a product placement
-                  <ion-img alt="plus" src="/svg/plus.svg"/>
-                </button>
-              </div>
+              <button @click="togglePP" class="left-row clear crate-popup">
+                Add a product placement
+                <ion-img alt="plus" src="/svg/plus.svg"/>
+              </button>
             </div>
             <product-placement :process_request="processRequest" :id="pp.product_placement_id" :name="pp.title" :description="pp.scene_description" :desired-item="pp.product_category" :requests="pp.product_requests" :key="index" v-for="(pp, index) in productPlacements"/>
           </div>
