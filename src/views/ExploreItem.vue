@@ -65,6 +65,14 @@
             </div>
           </div>
         </section>
+        <section class="related-searches">
+          <h2 class="text-red">
+            Related Searches
+          </h2>
+          <div class="left-row">
+            <list-item :id="item.id.toString()" :image="item.files" :heading="item.title" link-heading="ExploreItem" :sub-heading="item.brand_name" :key="index" v-for="(item, index) in related_products"/>
+          </div>
+        </section>
         <product-request-form :process_request="processRequest" :update-sent-req="updateSentReq" :product-id="productId" :productPlacementNames="productPlacementNames" :received="received" :requests="delivered" :is-active="formActive" :toggle-active="toggleForm"/>
       </main>
     </ion-content>
@@ -81,7 +89,8 @@ import ProductRequestForm from "@/components/ProductRequestForm.vue";
 import axios from "axios";
 import {ref} from "vue";
 import {url, user_code} from "@/base_information";
-import {productPlacementNamesType, productRequestType, productType} from "@/types";
+import {productPlacementNamesType, productRequestType, productsExploreType, productType} from "@/types";
+import ListItem from "@/components/ListItem.vue";
 export default {
   data() {
     return {
@@ -90,6 +99,7 @@ export default {
     }
   },
   components: {
+    ListItem,
     ProductRequestForm,
     AppNav,
     IonPage,
@@ -103,6 +113,7 @@ export default {
     const received = ref<productRequestType[]>([]);
     const delivered = ref<productRequestType[]>([]);
     const productId = router.currentRoute.value.params.id.toString()
+    const related_products = ref<productsExploreType[]>([]);
 
     const updateSentReq = (newRequest:productRequestType[]) => {
       delivered.value = newRequest;
@@ -116,6 +127,15 @@ export default {
         console.error('Error fetching data: ', error);
       }
     }
+    const getRelatedProducts = async () => {
+      try {
+        const response = await axios.get(`${url}get_related_products/${productId}`);
+        related_products.value = response.data
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    }
+
     const getProduct = async () => {
       try {
         const response = await axios.get(url + `get_single_product/${productId}/${user_code}`);
@@ -127,6 +147,7 @@ export default {
         delivered.value = sent_requests;
         received.value = received_requests;
         await getProductPlacements(product);
+        await getRelatedProducts();
       } catch (error) {
         console.error('Error fetching data: ', error);
         await router.push('/explore');
@@ -141,7 +162,7 @@ export default {
       }
     }
     getProduct();
-    return { router, item, received, delivered, productPlacementNames, productId, updateSentReq, updateProductRequest };
+    return { router, item, received, delivered, productPlacementNames, productId, updateSentReq, updateProductRequest, related_products };
   },
   computed: {
     filteredImages() {
