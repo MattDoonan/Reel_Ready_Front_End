@@ -67,7 +67,7 @@ export default {
     const filters = ref<string[]>([]);
     const activeFilter = ref<string>("");
     const products = ref<productsExploreType[]>([]);
-    const itemsLoaded = ref<number>(6);
+    const itemsLoaded = ref<number>(0);
     const toSearch = ref<string>("");
 
     const fetchFilters = async () => {
@@ -78,7 +78,7 @@ export default {
         console.error('Error fetching filters: ', error);
       }
     }
-    const fetchProducts = async (toLoad:number) => {
+    const fetchProducts = async (toLoad:number, reset:boolean) => {
       try {
         let endpoint =  url + `get_products/${toLoad}`
         if (toSearch.value !== "") {
@@ -90,33 +90,37 @@ export default {
           endpoint  = endpoint + `?filter=${activeFilter.value}`
         }
         const response = await axios.get(endpoint);
-        products.value = response.data
+        if (reset) {
+          products.value = response.data
+        } else {
+          products.value.push(...response.data)
+        }
       } catch (error) {
         console.error('Error fetching filters: ', error);
       }
     }
     const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-      itemsLoaded.value = itemsLoaded.value + 2
-      fetchProducts(itemsLoaded.value);
+      itemsLoaded.value = itemsLoaded.value + 1
+      fetchProducts(itemsLoaded.value, false);
       setTimeout(() => ev.target.complete(), 500);
     };
     const inputHandler = () => {
-      itemsLoaded.value = 6
-      fetchProducts(itemsLoaded.value);
+      itemsLoaded.value = 0
+      fetchProducts(itemsLoaded.value, true);
     };
 
     const noFilter = () => {
       activeFilter.value = "";
-      fetchProducts(itemsLoaded.value);
+      fetchProducts(itemsLoaded.value, true);
     }
 
     const changeFilter = (filter:string) => {
       activeFilter.value = filter;
-      fetchProducts(itemsLoaded.value);
+      fetchProducts(itemsLoaded.value, true);
     }
 
     fetchFilters();
-    fetchProducts(itemsLoaded.value);
+    fetchProducts(itemsLoaded.value, true);
     return { router, products, filters, ionInfinite, toSearch, inputHandler, noFilter, changeFilter, activeFilter};
   },
   methods: {
