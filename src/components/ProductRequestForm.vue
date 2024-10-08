@@ -33,7 +33,7 @@
         <label class="text-red">
           Outgoing Requests
         </label>
-        <PlacementRequest :process_request="process_request" :product_placement_id="request.product_placement_id" :product_id="request.product_id" :sent-to="request.sent_to" :title="request.title" :status="request.response" :sub-title="request.scene_description" :image="request.image" :key="key" v-for="(request,key) in requests"/>
+        <PlacementRequest :process_request="process_request" :product_placement_id="request.product_placement_id" :product_id="request.product_id.toString()" :sent-to="request.sent_to" :title="request.title" :status="request.response" :sub-title="request.scene_description" :image="request.image" :key="key" v-for="(request,key) in requests"/>
       </div>
       <hr v-if="received.length > 0 && requests.length > 0">
       <div class="left-col" v-if="received.length > 0">
@@ -100,7 +100,7 @@ export default {
       required: true,
     },
     productId: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     updateSentReq: {

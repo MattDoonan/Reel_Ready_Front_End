@@ -63,11 +63,11 @@ export default {
       required: true,
     },
     product_id: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     product_placement_id: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     process_request: {

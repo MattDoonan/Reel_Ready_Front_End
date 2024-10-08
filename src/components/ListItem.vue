@@ -21,7 +21,7 @@ export default {
   props: {
     id: {
       require: true,
-      type: String,
+      type: [String, Number],
     },
     linkHeading: {
       require: true,

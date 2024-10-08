@@ -9,7 +9,7 @@ export interface productPlacementRequestType {
     response: string
 }
 export interface ProductPlacementType {
-    product_placement_id: number | string,
+    product_placement_id: string,
     title: string;
     scene_description: string;
     product_category: string;

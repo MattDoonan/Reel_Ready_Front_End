@@ -145,7 +145,6 @@ export default {
   methods: {
     togglePP(number: number) {
       this.ppActive = number;
-      console.log(this.ppActive)
     },
     goProfile() {
       this.router.push('/profile')
