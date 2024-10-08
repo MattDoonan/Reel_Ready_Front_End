@@ -1,11 +1,11 @@
 <template>
-  <div :class="{'active': isActive}" class="popup-background">
+  <div :class="{'active': isActive === 1}" class="popup-background">
     <section class="popup-section create-project">
       <div class="space-apart-row">
         <h3 class="text-black">
           Requests
         </h3>
-        <button @click="toggleActive()" class="clear">
+        <button @click="toggleActive(0)" class="clear">
           <ion-img alt="exit" src="/svg/exit.svg"/>
         </button>
       </div>
@@ -60,7 +60,7 @@
       <label class="text-red">
         {{descriptionError ? 'Description cannot be empty' : 'Description'}}
       </label>
-      <textarea :class="{'error': descriptionError}" v-model="selectedDescription" placeholder="Add a note"/>
+      <textarea :class="{'error': descriptionError}" v-model="selectedDescription" placeholder="Add description of the project"/>
       <button @click="checkToSubmit" class="red">
         Submit
       </button>
@@ -98,7 +98,7 @@ export default {
   },
   props: {
     isActive: {
-      type: Boolean,
+      type: Number,
       required: true,
     },
     toggleActive: {
@@ -217,7 +217,7 @@ export default {
           const projects = response.data;
           if (Array.isArray(projects)) {
             this.updateProjects(projects)
-            this.toggleActive();
+            this.toggleActive(2);
             this.selectedTitle = '';
             this.selectedDescription = '';
             this.selectedProjectType = 'none';

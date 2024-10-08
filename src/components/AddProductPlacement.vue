@@ -1,11 +1,11 @@
 <template>
-  <div :class="{'active': isActive}" class="popup-background">
+  <div :class="{'active': isActive === 1}" class="popup-background">
     <section class="popup-section pp">
       <div class="space-apart-row">
         <h3 class="text-black">
           Add Product Placement
         </h3>
-        <button @click="toggleActive()" class="clear">
+        <button @click="toggleActive(0)" class="clear">
           <ion-img src="/svg/exit.svg"/>
         </button>
       </div>
@@ -30,7 +30,7 @@
       <label class="text-red">
         {{sceneError ? 'Description cannot be empty' : 'Description'}}
       </label>
-      <textarea :class="{'error': sceneError}" v-model="selectedSceneDescription" placeholder="Add a note"/>
+      <textarea :class="{'error': sceneError}" v-model="selectedSceneDescription" placeholder="Write a description of your scene"/>
       <button @click="checkToSubmit" class="red">
         Submit
       </button>
@@ -61,7 +61,7 @@ export default {
   },
   props: {
     isActive: {
-      type: Boolean,
+      type: Number,
       required: true,
     },
     toggleActive: {
@@ -122,7 +122,7 @@ export default {
           const product_placements = response.data;
           if (Array.isArray(product_placements)) {
             this.updatePP(product_placements)
-            this.toggleActive();
+            this.toggleActive(2);
             this.selectedTitle = '';
             this.selectedSceneDescription = '';
             this.selectedCategory = 'none';

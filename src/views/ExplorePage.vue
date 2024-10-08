@@ -69,6 +69,7 @@ export default {
     const products = ref<productsExploreType[]>([]);
     const itemsLoaded = ref<number>(0);
     const toSearch = ref<string>("");
+    const noLoad = ref<boolean>(false);
 
     const fetchFilters = async () => {
       try {
@@ -91,8 +92,12 @@ export default {
         }
         const response = await axios.get(endpoint);
         if (reset) {
+          noLoad.value = false
           products.value = response.data
         } else {
+          if(response.data.length === 0) {
+            noLoad.value = true;
+          }
           products.value.push(...response.data)
         }
       } catch (error) {
@@ -100,9 +105,11 @@ export default {
       }
     }
     const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-      itemsLoaded.value = itemsLoaded.value + 1
-      fetchProducts(itemsLoaded.value, false);
-      setTimeout(() => ev.target.complete(), 500);
+      if (!noLoad.value) {
+        itemsLoaded.value = itemsLoaded.value + 1
+        fetchProducts(itemsLoaded.value, false);
+      }
+      setTimeout(() => ev.target.complete(), 500)
     };
     const inputHandler = () => {
       itemsLoaded.value = 0
@@ -110,11 +117,13 @@ export default {
     };
 
     const noFilter = () => {
+      itemsLoaded.value = 0
       activeFilter.value = "";
       fetchProducts(itemsLoaded.value, true);
     }
 
     const changeFilter = (filter:string) => {
+      itemsLoaded.value = 0;
       activeFilter.value = filter;
       fetchProducts(itemsLoaded.value, true);
     }

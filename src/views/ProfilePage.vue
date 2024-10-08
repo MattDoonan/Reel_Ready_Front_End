@@ -14,9 +14,9 @@
               <ion-img alt="search icon" src="/svg/search-icon.svg"/>
               <input v-model="toSearch" @input="inputHandler" type="text"/>
             </div>
-            <button @click="toggleCreate" class="left-row clear crate-popup">
+            <button @click="toggleCreate(1)" class="left-row text-white crate-popup">
               Create Project
-              <ion-img alt="plus" src="/svg/plus.svg"/>
+              <ion-img alt="plus" src="/svg/plus-white.svg"/>
             </button>
           </div>
           <div class="grid">
@@ -24,6 +24,7 @@
           </div>
         </section>
         <project-creation-form :go-profile="goProfile" :update-projects="updateProjects" :project-type="projectTypes" :tags="tags" :toggle-active="toggleCreate" :is-active="isActive"/>
+        <ItemAdded :toggle-active="toggleCreate" text="Project added successfully" :is-active="isActive"/>
       </main>
     </ion-content>
     <app-nav/>
@@ -41,13 +42,15 @@ import axios from "axios";
 import {url, user_code} from "@/base_information";
 import {ProductPlacementType, projectsExploreType} from "@/types";
 import ProjectCreationForm from "@/components/ProjectCreationForm.vue";
+import ItemAdded from "@/components/ItemAdded.vue";
 export default {
   data() {
     return {
-      isActive: false
+      isActive: 0
     }
   },
   components: {
+    ItemAdded,
     ProjectCreationForm,
     ListItem,
     AppNav,
@@ -99,8 +102,8 @@ export default {
     return { router, projects, inputHandler, toSearch, projectTypes, tags, updateProjects };
   },
   methods: {
-    toggleCreate() {
-      this.isActive = !this.isActive;
+    toggleCreate(number: number) {
+      this.isActive = number;
     },
     goProfile() {
       this.router.push('/profile')

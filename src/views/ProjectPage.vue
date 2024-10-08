@@ -34,15 +34,16 @@
               <h2 class="text-red">
                 Product Placement Posts
               </h2>
-              <button @click="togglePP" class="left-row clear crate-popup">
+              <button @click="togglePP(1)" class="left-row text-white crate-popup">
                 Add a product placement
-                <ion-img alt="plus" src="/svg/plus.svg"/>
+                <ion-img alt="plus" src="/svg/plus-white.svg"/>
               </button>
             </div>
             <product-placement :process_request="processRequest" :id="pp.product_placement_id" :name="pp.title" :description="pp.scene_description" :desired-item="pp.product_category" :requests="pp.product_requests" :key="index" v-for="(pp, index) in productPlacements"/>
           </div>
         </section>
         <AddProductPlacement v-if="item" :go-profile="goProfile" :update-p-p="updatePP" :item-id="project_id" :categories="categories" :toggle-active="togglePP" :is-active="ppActive"/>
+        <ItemAdded :toggle-active="togglePP" text="Product placement added successfully" :is-active="ppActive"/>
       </main>
     </ion-content>
     <app-nav/>
@@ -61,15 +62,17 @@ import axios from 'axios';
 import {url, user_code} from "@/base_information";
 
 import {ProductPlacementType, ProductType} from "@/types"
+import ItemAdded from "@/components/ItemAdded.vue";
 
 export default {
   data() {
     return {
       imgIndex: 0,
-      ppActive: false,
+      ppActive: 0,
     }
   },
   components: {
+    ItemAdded,
     AddProductPlacement,
     ProductPlacement,
     IonImg,
@@ -140,8 +143,9 @@ export default {
     }
   },
   methods: {
-    togglePP() {
-      this.ppActive = !this.ppActive;
+    togglePP(number: number) {
+      this.ppActive = number;
+      console.log(this.ppActive)
     },
     goProfile() {
       this.router.push('/profile')
