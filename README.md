@@ -12,7 +12,7 @@ Before you begin, ensure you have the following installed:
 - Node.js 
 - npm 
 - Ionic CLI (to install type: npm install -g @ionic/cli)
-- 
+- Gradle (For mobile simulation)
 - A modern web browser 
 
 ## Installation
@@ -37,12 +37,16 @@ Follow these steps to install the project:
 
 ## Running the Project
 
-1. **ionic serve:**
+1. **Run the API:**
+    
+   Run the Backend API
+
+2. **Run the application:**
     ```bash
-      npm install
+      ionic serve
    ```
 
-2. **Open your web browser and navigate to:**
+3. **Open your web browser and navigate to:**
     ```bash
       http://localhost:8100
    ```
@@ -50,14 +54,59 @@ Follow these steps to install the project:
 You should see the application running in your browser. The web browser should also appear in the terminal.
 
 
-## Additional Commands
+## Test on android virtual machine
 
-1. **Test on android virtual machine**
+1. **Ensure Gradle is downloaded**
+   Install at https://gradle.org/
+2. **Install Android Studio**
+   Install at https://developer.android.com/studio?gad_source=1&gclid=Cj0KCQjw05i4BhDiARIsAB_2wfAwqNwYxUMrvpFZ_Rx8yCDefwJydP3zBl90s5n3IHMB7lxlhpR9ssgaAkCPEALw_wcB&gclsrc=aw.ds
+3. **Install android capacitor (if not installed)**
+   ```bash
+      npm install @capacitor/android
+   ```
+4. **Add the Android platform**
+   ```bash
+      npx cap add android
+   ```
+5. **Open in android studio by running**
+   ```bash
+      npx cap open android
+   ```
+6. **Run simulation**
+
+   Command:
+   ```bash
+      npx cap run android
+   ```
+   Or run in android studio
+
+## Test on ios virtual machine
+
+Must require a mac (I don't have one so don't know if this will work)
+
+1. **Install ios capacitor (if not installed)**
     ```bash
-      ionic capacitor run android
+      npm install @capacitor/ios
    ```
 
-2. **Test on ios virtual machine**
+2. **Test on ios virtual machine**       
+    ```bash                             
+      npx cap add ios           
+   ```     
+                                
+3. **Open in Xcode**
     ```bash
-      ionic capacitor run ios
-   ```
+      npx cap open ios
+   ```     
+   or 
+   ```bash                          
+      open ios/App/App.xcworkspace   
+   ```          
+
+4. **Run ios app**
+    ```bash                             
+      npx cap run ios      
+   ```  
+ 
+                        
+              
