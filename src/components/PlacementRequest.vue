@@ -3,7 +3,7 @@
     <div class="request-img-container">
       <ion-img :src="imageSrc"/>
     </div>
-    <div class="left-col">
+    <div class="left-col req-mar">
       <p class="text-black">
         {{title}}
       </p>

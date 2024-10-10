@@ -17,7 +17,7 @@
       {{requestsShow ? 'Hide requests' : 'Show requests'}}
       <ion-img :style="requestsShow ? 'rotate:180deg' : 'rotate:0'" src="/svg/down-arrow.svg"/>
     </button>
-    <div class="left-col request-container" v-if="requestsShow">
+    <div class="left-col" v-if="requestsShow">
       <PlacementRequest :process_request="process_request" :sent-to="request.sent_to" :product_id="request.product_id" :product_placement_id="id" :title="request.title" :image="request.files" :sub-title="request.brand" :status="request.response" :key="index" v-for="(request, index) in requests"/>
     </div>
   </article>

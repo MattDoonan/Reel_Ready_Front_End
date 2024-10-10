@@ -52,3 +52,67 @@ Follow these steps to install the project:
    ```
 
 You should see the application running in your browser. The web browser should also appear in the terminal.
+
+
+## Test on android virtual machine
+
+1. **Ensure Gradle is downloaded**
+
+   Install at https://gradle.org/
+
+2. **Install Android Studio**
+
+   Install at https://developer.android.com/studio?gad_source=1&gclid=Cj0KCQjw05i4BhDiARIsAB_2wfAwqNwYxUMrvpFZ_Rx8yCDefwJydP3zBl90s5n3IHMB7lxlhpR9ssgaAkCPEALw_wcB&gclsrc=aw.ds
+
+3. **Ensure the api link is set to a HTTPS request**
+
+   This will require uploading the Backend API to a server.
+   Then Under base_information.ts in the src folder change the url constant to equal the URL your API is hosted at.
+   Keep the / at the end.
+   
+4. **Build Ionic project**
+   ```bash
+      ionic build
+   ```
+   
+5. **Add the Android platform**
+   ```bash
+      npx cap add android
+   ```
+6. **Open in android studio by running**
+   ```bash
+      npx cap open android
+   ```
+7. **Run simulation**
+
+   Command:
+   ```bash
+      npx cap run android
+   ```
+   Or run in android studio
+
+## Test on ios virtual machine
+
+Must require a mac (I don't have one so don't know if this will work)
+
+1. **Test on ios virtual machine**       
+    ```bash                             
+      npx cap add ios           
+   ```     
+                                
+2. **Open in Xcode**
+    ```bash
+      npx cap open ios
+   ```     
+   or 
+   ```bash                          
+      open ios/App/App.xcworkspace   
+   ```          
+
+3. **Run ios app**
+    ```bash                             
+      npx cap run ios      
+   ```  
+ 
+                        
+              

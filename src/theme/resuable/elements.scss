@@ -234,11 +234,12 @@ div.dropdown-square.error {
   align-items: center;
   margin: 5px 0 0 0 !important;
   background: $black;
-  padding: 6px 16px;
-  border-radius:18px;
+  padding: 6px 16px 6px 16px;
+  border-radius: 18px;
   ion-img {
-    margin-left: 8px;
     height: 20px;
+    width: 20px;
+    margin: 0 0 0 8px;
   }
 }
 
@@ -311,7 +312,11 @@ textarea::placeholder {
   border-radius: 18px;
   background: none;
   color: $black;
-  height: fit-content;
+  height: 25px;
+  p {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .listItem:hover {
@@ -322,8 +327,10 @@ textarea::placeholder {
 
 .request {
   width: 100%;
-  margin: 0 0 0 0;
-  gap: 9px;
+  margin: 16px 0 0 0;
+  .req-mar {
+    margin-left: 9px;
+  }
   label {
     display: -webkit-box;
     -webkit-box-orient: vertical;
