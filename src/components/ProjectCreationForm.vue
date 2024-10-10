@@ -12,7 +12,7 @@
       <div class="form-grid">
         <div class="left-col">
           <label class="text-red">
-            {{imageError ? 'Invalid image format' : 'Upload an image'}}
+            {{imageError ? 'Invalid image format or size' : 'Upload an image'}}
           </label>
           <button :class="{'error': imageError}" class="upload-img-container" @click="uploadImage">
             <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" style="display:none;" />
@@ -145,7 +145,7 @@ export default {
     onFileChange(event) {
       this.imageError = false;
       const file = event.target.files[0];
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith('image/') && file.size < 1024 * 1024) {
         this.processToBase64(file).then(base64 => {
           this.image = String(base64)
         }).catch(error => {
@@ -213,6 +213,7 @@ export default {
           type: this.selectedProjectType,
           tags: this.selectedTags
         });
+        console.log(response.status)
         if (response.status === 201) {
           const projects = response.data;
           if (Array.isArray(projects)) {

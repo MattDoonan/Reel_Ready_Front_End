@@ -1,4 +1,6 @@
-export const url = 'http://127.0.0.1:5000' + '/' // Change this to api url
-export const user_code = 0
+export const url = 'http://127.0.0.1:5000' + '/' // Change this to api url (keep the '/')
+export const user_code = 1
 
-//   https://seng402-api.vercel.app/
+// LocalHost link: http://127.0.0.1:5000
+
+// Test API:  https://seng402-api.vercel.app
