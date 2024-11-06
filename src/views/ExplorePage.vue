@@ -1,14 +1,17 @@
 <template>
+  <!-- Main page structure containing a list of discoverable products with infinite scroll -->
   <ion-page>
     <ion-content>
       <main>
         <section class="explore-items">
           <div class="explore-search">
+            <!-- Search bar for filtering products by name -->
             <div class="input-search">
               <ion-img alt="search icon" src="/svg/search-icon.svg"/>
               <input v-model="toSearch" @input="inputHandler" type="text"/>
             </div>
             <div class="left-row">
+              <!-- Dropdown for selecting product category filters -->
               <div class="dropdown">
                 <button @click="togglePC" class="left-row text-black">
                   {{activeFilter === "" ? "Product Category" : activeFilter}}
@@ -25,6 +28,7 @@
               </div>
             </div>
           </div>
+          <!-- Infinite scroll for loading more products -->
           <ion-infinite-scroll @ionInfinite="ionInfinite" class="grid">
               <list-item :id="item.id.toString()" :image="item.files" :heading="item.title" link-heading="ExploreItem" :sub-heading="item.brand_name" :key="index" v-for="(item, index) in products"/>
           </ion-infinite-scroll>
@@ -50,6 +54,7 @@ import {productsExploreType} from "@/types";
 export default {
   data() {
     return {
+      // Controls the visibility of the product category dropdown
       pcActive: false,
     }
   },
@@ -63,14 +68,25 @@ export default {
     IonInfiniteScrollContent,
   },
   setup() {
+    // Vue Router instance for navigation
     const router = useRouter();
+    // List of available filters for product categories
     const filters = ref<string[]>([]);
+    // Currently active filter for products
     const activeFilter = ref<string>("");
+    // List of fetched products
     const products = ref<productsExploreType[]>([]);
+    // Number of items loaded for infinite scroll
     const itemsLoaded = ref<number>(0);
+    // Search query string
     const toSearch = ref<string>("");
+    // Flag indicating if no more products should be loaded
     const noLoad = ref<boolean>(false);
 
+
+    /**
+     * Fetches the available filters for product categories from the server.
+     */
     const fetchFilters = async () => {
       try {
         const response = await axios.get(url + 'explore-filters');
@@ -79,6 +95,13 @@ export default {
         console.error('Error fetching filters: ', error);
       }
     }
+
+    /**
+     * Fetches the list of products based on the search query and active filter.
+     *
+     * @param toLoad - Number of products to load.
+     * @param reset - Whether to reset the current products list for a new one.
+     */
     const fetchProducts = async (toLoad:number, reset:boolean) => {
       try {
         let endpoint =  url + `get_products/${toLoad}`
@@ -104,6 +127,12 @@ export default {
         console.error('Error fetching filters: ', error);
       }
     }
+
+    /**
+     * Handles the infinite scroll event and loads more products if necessary.
+     *
+     * @param ev - The custom event triggered by the infinite scroll.
+     */
     const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
       if (!noLoad.value) {
         itemsLoaded.value = itemsLoaded.value + 1
@@ -111,17 +140,31 @@ export default {
       }
       setTimeout(() => ev.target.complete(), 500)
     };
+
+    /**
+     * Handles input changes in the search field and triggers a product fetch.
+     */
     const inputHandler = () => {
       itemsLoaded.value = 0
       fetchProducts(itemsLoaded.value, true);
     };
 
+
+    /**
+     * Removes the active filter and resets the products list.
+     */
     const noFilter = () => {
       itemsLoaded.value = 0
       activeFilter.value = "";
       fetchProducts(itemsLoaded.value, true);
     }
 
+
+    /**
+     * Changes the active filter and fetches the filtered products.
+     *
+     * @param filter - The filter to apply.
+     */
     const changeFilter = (filter:string) => {
       itemsLoaded.value = 0;
       activeFilter.value = filter;
@@ -133,13 +176,26 @@ export default {
     return { router, products, filters, ionInfinite, toSearch, inputHandler, noFilter, changeFilter, activeFilter};
   },
   methods: {
+    /**
+     * Toggles the visibility of the product category dropdown.
+     */
     togglePC() {
       this.pcActive = !this.pcActive;
     },
+
+    /**
+     * Selects a filter from the dropdown and applies it.
+     *
+     * @param filter - The selected filter.
+     */
     selectFilter(filter:string) {
       this.pcActive = false;
       this.changeFilter(filter)
     },
+
+    /**
+     * Removes the current filter and resets the product list.
+     */
     removeFilter() {
       this.pcActive = false;
       this.noFilter()

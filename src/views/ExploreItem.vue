@@ -1,7 +1,9 @@
 <template>
+  <!-- Main page structure containing the individual product details -->
   <ion-page>
     <ion-content>
       <main>
+        <!-- Display the main image and sub images of the product -->
         <section v-if="item" class="img-container item center-row">
           <div class="main-img">
             <ion-img alt="main image" :src="images[imgIndex]"/>
@@ -12,6 +14,7 @@
             </div>
           </div>
         </section>
+        <!-- Product details including title, description, and price -->
         <section v-if="item" class="explore-item center-top-col">
           <div class="space-apart-row item-title">
             <div class="left-col">
@@ -65,6 +68,7 @@
             </div>
           </div>
         </section>
+        <!-- Related product search section -->
         <section class="related-searches">
           <h2 class="text-red">
             Related Searches
@@ -94,7 +98,9 @@ import ListItem from "@/components/ListItem.vue";
 export default {
   data() {
     return {
+      // Index of the currently displayed image
       imgIndex: 0,
+      // Determines if the product request form is active
       formActive: false,
     }
   },
@@ -108,16 +114,31 @@ export default {
   },
   setup() {
     const router = useRouter();
+    // Holds the current product data
     const item = ref<productType>();
+    // Holds the product placement names
     const productPlacementNames = ref<productPlacementNamesType[]>([])
+    // Holds received product requests
     const received = ref<productRequestType[]>([]);
+    // Holds sent product requests
     const delivered = ref<productRequestType[]>([]);
+    // Product ID from route parameters
     const productId = router.currentRoute.value.params.id.toString()
+    // Holds related products data
     const related_products = ref<productsExploreType[]>([]);
 
+    /**
+     * Updates the list of sent product requests.
+     * @param {productRequestType[]} newRequest - New product requests to update.
+     */
     const updateSentReq = (newRequest:productRequestType[]) => {
       delivered.value = newRequest;
     }
+
+    /**
+     * Fetches product placement names from the API.
+     * @param {productType} product - The product for which to fetch placement names.
+     */
     const getProductPlacements = async (product: productType) => {
       try {
         if (!product) return;
@@ -127,6 +148,10 @@ export default {
         console.error('Error fetching data: ', error);
       }
     }
+
+    /**
+     * Fetches related products from the API.
+     */
     const getRelatedProducts = async () => {
       try {
         const response = await axios.get(`${url}get_related_products/${productId}`);
@@ -136,6 +161,9 @@ export default {
       }
     }
 
+    /**
+     * Fetches the product data, including details, requests, and related products.
+     */
     const getProduct = async () => {
       try {
         const response = await axios.get(url + `get_single_product/${productId}/${user_code}`);
@@ -153,6 +181,13 @@ export default {
         await router.push('/explore');
       }
     }
+
+    /**
+     * Updates the response of a product request.
+     * @param {string} product_id - The ID of the product.
+     * @param {string} product_placement_id - The ID of the product placement.
+     * @param {string} newResponse - The new response for the request.
+     */
     const updateProductRequest = (product_id: string, product_placement_id: string, newResponse: string) => {
       const product = received.value.find(item =>
           item.product_id === product_id && item.product_placement_id === product_placement_id
@@ -161,15 +196,23 @@ export default {
         product.response = newResponse
       }
     }
+
+    // Initial call to fetch product data
     getProduct();
     return { router, item, received, delivered, productPlacementNames, productId, updateSentReq, updateProductRequest, related_products };
   },
   computed: {
+    /**
+     * Returns a filtered list of images, excluding the current image index.
+     */
     filteredImages() {
       const list = this.images.slice(0, 3)
       list.splice(this.imgIndex, this.imgIndex + 1)
       return list;
     },
+    /**
+     * Returns the list of images for the current product.
+     */
     images(): string[] {
       if (this.item) {
         const imgs: string[] = [];
@@ -180,6 +223,9 @@ export default {
       }
       return []
     },
+    /**
+     * Returns the formatted price with two decimal places.
+     */
     twodp(): string {
       if (this.item) {
         if (this.item.price !== undefined && this.item.price !== null) {
@@ -190,9 +236,19 @@ export default {
     }
   },
   methods: {
+    /**
+     * Toggles the visibility of the product request form.
+     */
     toggleForm() {
       this.formActive = !this.formActive
     },
+
+    /**
+     * Processes a product request and updates its response.
+     * @param {string} product_id - The ID of the product.
+     * @param {string} product_placement_id - The ID of the product placement.
+     * @param {string} outcome - The outcome of the request (accepted, declined).
+     */
     async processRequest(product_id: string, product_placement_id:string, outcome: string) {
       try {
         const response = await axios.post(url + `process_set_designer_incoming_request/${user_code}`, {
